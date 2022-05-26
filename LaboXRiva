@@ -1,0 +1,125 @@
+#include <iostream>
+
+using namespace std;
+struct nodo{
+	int nro;
+	struct nodo *sgte;
+	};
+	
+typedef struct nodo *TpLista;
+
+TpLista crearNodo(){
+	TpLista nuevo=NULL;
+	nuevo = new(struct nodo);
+	cout<<"Ingresar dato --> "; cin>>nuevo->nro;
+	cout<<endl;
+	nuevo->sgte=NULL;
+	return nuevo;
+}
+
+void verLista(TpLista lista){
+	
+	int i=0;
+	while(lista != NULL){
+		cout<<" "<<i+1<<") "<<lista->nro<<endl;
+		lista=lista->sgte;
+		i++;
+	}	
+}
+
+void insertaFinalParMenor(TpLista &lista, int &acumulador){
+	TpLista p=lista;
+	TpLista q=crearNodo();
+	if(q->nro%2==0){
+	if(lista==NULL){
+		lista=q;
+		acumulador=acumulador+q->nro;
+		return;
+	}
+	
+	while(p->sgte != NULL){
+			p=p->sgte;
+	}
+	if(q->nro<p->nro){
+		p->sgte=q;
+		acumulador=acumulador+q->nro;	
+	} else cout<<"\nERROR el numero insertado es mayor o igual al ingresado anteriormente"<<endl;
+	} else cout<<"\nERROR el numero insertado no es par"<<endl;
+}
+
+void eliminarPorPosicionMostrar(TpLista &lista, int pos, int &acumulador){
+	TpLista t = lista, p = NULL;
+	int x = 1;
+	while(x!=pos){
+		p = t;
+		t = t->sgte;
+		x++;
+	}
+	p->sgte = t->sgte;
+	acumulador = acumulador - t->nro;
+	cout<<"ELEMENTO ELIMINADO : "<<t->nro<<" posicion "<<pos<<endl;
+	delete(t);
+} 
+
+void menu(){
+	
+	system("CLS");
+	cout<<"\n\t LISTA ENLAZADA SIMPLE\n\n";
+	cout<<"1.- Insertar al final un numero par menor al ultimo"<<endl;
+	cout<<"2.- Mostrar la cantidad de nodos y suma de los mismos"<<endl;
+	cout<<"3.- Eliminar el elemento medio de la lista"<<endl;
+	cout<<"4.- Mostrar Lista"<<endl;
+	cout<<"0.- Salir"<<endl<<endl;	
+	
+	cout<<"Ingresar Opcion---> "<<endl;
+}
+
+
+int main() {
+	TpLista lista=NULL;
+	int opc, n;
+	int conta=0, acum=0;
+	do{
+		menu();
+		cin>>opc;
+		
+		switch(opc){
+			case 1:{
+				insertaFinalParMenor(lista, acum);
+				conta++;
+				verLista(lista);
+				system("pause");
+				break;
+			}
+			case 2:{
+				cout<<"ELEMENTOS INGRESADOS: "<<conta<<" ACUMULADO: "<<acum<<endl;
+				verLista(lista);
+				system("pause");
+				break;
+			}
+			case 3:{
+				int p;
+				if(conta%2==0){
+					p=conta/2;
+					eliminarPorPosicionMostrar(lista, p, acum);
+					conta--;
+				} else{
+					p=(conta+1)/2;
+					eliminarPorPosicionMostrar(lista,p, acum);
+					conta--;
+				} 
+				verLista(lista);
+				system("pause");
+				break;	
+			}
+			
+			case 4:{
+				verLista(lista);
+				system("pause");
+				break;
+			}
+		}
+	}while(opc !=0);
+	
+	return 0;
+}
